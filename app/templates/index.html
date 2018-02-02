@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>App Store Admin</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename = 'favicon.png') }}" type="image/x-icon">
+    <link type="text/css" rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="static/css/custom.css">
+
+    <link type="text/css" rel="stylesheet" href="/static/fancytree/skin-win8/ui.fancytree.min.css">
+    <link type="text/css" rel="stylesheet" href="/static/css/dataTables.bootstrap4.min.css">
+
+    <style type="text/css">
+        div#tree {
+            min-height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ced4da;
+        }
+
+        ul.fancytree-container {
+            border: 0;
+            outline: 0;
+            /* No focus frame */
+        }
+
+        .card {
+            border: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="admin container-fluid mt-3">
+        <div class="card text-center">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs float-left">
+                    <li class="nav-item ">
+                        <a class="nav-link active" href="#">Execution History</a>
+                    </li>
+
+                    <li class="nav-item ">
+                        <a class="nav-link disabled" href="#">Test</a>
+                    </li>
+                </ul>
+                <button id="selectCases" class="btn btn-primary float-right ml-1" data-toggle="modal" data-target="#selectCaseModal">
+                        <i class="far fa-plus-square fa-lg"></i>
+                </button>
+                <div class="searchwrapper"></div>
+                <input type="text" class="form-control w-25 float-right" id="recordSearch" placeholder="search">
+            </div>
+        </div>
+        <div class="card table-responsive">
+            {#
+
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr class="text-center">
+                        <th>ID</th>
+                        <th>Test Case</th>
+                        <th>Owner</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Status</th>
+                        <th>
+                            <i class="fas fa-eye"></i>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    {% for record in recordList %}
+                    <tr>
+                        <td>{{record.id}}</td>
+                        <td>{{record.name}}</td>
+                        <td>{{record.owner | default('', true)}}</td>
+                        <td>{{record.start_time}}</td>
+                        <td>{{record.end_time | default('', true)}}</td>
+                        <td>{{record.status}}</td>
+                        <td> {% if record.log_path %}<span class="executionStatus"><a href="{{record.log_path}}" ><i class="far fa-file-alt"></i></a></span>{%
+                            endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            #}
+
+
+            <table id="recordsTable" class="table table-bordered" cellspacing="0" width="100%">
+                <thead class="thead-light">
+                    <tr>
+                        <th>id</th>
+                        <th>name</th>
+                        <th>owner</th>
+                        <th>start time</th>
+                        <th>end time</th>
+                        <th>task id</th>
+                        <th>status</th>
+                        <th>log</th>
+
+                    </tr>
+                </thead>
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- Modal-Select-Case -->
+    <div class="selectCase modal fade" id="selectCaseModal" tabindex="-1" role="dialog" aria-labelledby="selectCaseModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="selectCase container">
+                    <input type="text" class="form-control my-3 " name="search" placeholder="search">
+
+                    <div id="tree"></div>
+
+                    <div class="clearfix">
+                        <button id="execute" type="button" class="btn btn-primary my-3 float-right">Submit</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="static/js/jquery-3.2.1.min.js"></script>
+    <script src="static/js/popper.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="/static/fancytree/jquery.fancytree-all-deps.min.js"></script>
+    <script defer src="/static/js/fontawesome-all.min.js"></script>
+    <script src="/static/js/jquery.dataTables.js"></script>
+    <script src="/static/js/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+        $(function () {
+
+
+            var table = $('#recordsTable').DataTable({
+                "dom": 'rt<"bottom"ilp><"clear">',
+                "pageLength": 15,
+                "lengthMenu": [15, 30, 60],
+                "order": [
+                    [0, "desc"]
+                ],
+
+                "ajax": {
+                    "url": "{{url_for('main.records')}}",
+                    "type": "GET"
+                },
+                "columns": [{
+                        "data": "id"
+                    },
+                    {
+                        "data": "name"
+                    },
+                    {
+                        "data": "owner"
+                    },
+                    {
+                        "data": "start_time"
+                    },
+                    {
+                        "data": "end_time"
+                    },
+                    {
+                        "data": "task_id"
+                    },
+                    {
+                        "data": "status"
+                    },
+                    {
+                        "data": "log_path"
+                    }
+                ],
+                "columnDefs": [{
+                        "targets": 5,
+                        "createdCell": function (td, cellData, rowData, row, col) {
+                            $(td).addClass('task_id')
+                        }
+                    },
+                    {
+                        "targets": 6,
+                        "createdCell": function (td, cellData, rowData, row, col) {
+                            $(td).addClass('status')
+                        }
+
+                    }
+                ],
+
+            })
+            $('#recordSearch').keyup(function () {
+                table.search($(this).val()).draw();
+            })
+
+            $.get("{{url_for('main.runnigRecords')}}", function (data) {
+                for (var i = 0; i < data["runningRecords"].length; i++) {
+                    var record = data["runningRecords"][i];
+                    $.each(record, function () {
+                        var key = Object.keys(this)[0];
+                        var value = this[key];
+                    });
+                    var statusElement = $("td:contains(" + record["task_id"] + ")").next();
+                    var progressHtml ='<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div></div>';
+                    statusElement.empty();
+                    statusElement.append(progressHtml);
+                    update_progress("{{url_for('main.task_status')}}", record["task_id"]);
+                }
+
+
+            });
+
+            /*
+
+            $.get("{{url_for('main.runnigRecords')}}", function (data) {
+                for (record in data["runningRecords"]) {
+                    status_url = '{{url_for("main.task_status",task_id="#")}}'.replace("#", record["task_id"])
+                    update_progress(status_url, record["id"]);
+
+                }
+                if (data['state'] == 'SUCCESS') {
+                    var progressEelem = syncElem.parent().next(".executionSection").find(".progress");
+                    progressEelem.remove();
+                    var res =
+                        '<span class="executionStatus"><a href="#" ><i class="far fa-file-alt"></i></a></span>'
+                        .replace("#", "http://127.0.0.1:9900/browse/1233")
+                    syncElem.parent().next(".executionSection").append(res)
+                } else {
+                    setTimeout(function () {
+                        update_progress(status_url, syncElem);
+                    }, 2000);
+                }
+            });
+                */
+
+            $('#selectCaseModal').on('show.bs.modal', function (e) {
+                $("#tree").fancytree({
+                    extensions: ["filter"],
+                    quicksearch: true,
+                    focusOnSelect: false,
+                    filter: {
+                        autoApply: true, // Re-apply last filter if lazy data is loaded
+                        autoExpand: false, // Expand all branches that contain matches while filtered
+                        counter: true, // Show a badge with number of matching child nodes near parent icons
+                        fuzzy: false, // Match single characters in order, e.g. 'fb' will match 'FooBar'
+                        hideExpandedCounter: true, // Hide counter badge if parent is expanded
+                        hideExpanders: false, // Hide expanders if all child nodes are hidden by filter
+                        highlight: true, // Highlight matches by wrapping inside <mark> tags
+                        leavesOnly: false, // Match end nodes only
+                        nodata: true, // Display a 'no data' status node if result is empty
+                        mode: "hide" // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+
+                    },
+                    checkbox: true,
+                    selectMode: 3,
+                    source: {
+                        url: "{{url_for('main.cases')}}"
+                    },
+                    activate: function (event, data) {
+                        $("#statusLine").text(event.type + ": " + data.node);
+                    },
+                    select: function (event, data) {
+                        $("#statusLine").text(event.type + ": " + data.node.isSelected() +
+                            " " + data.node);
+                    }
+                });
+            })
+
+
+
+            $("input[name=search]").keyup(function (e) {
+                var n,
+                    tree = $.ui.fancytree.getTree(),
+                    args = "autoApply autoExpand fuzzy hideExpanders highlight leavesOnly nodata".split(
+                        " "),
+                    opts = {},
+                    filterFunc = tree.filterNodes,
+                    match = $(this).val();
+
+                $.each(args, function (i, o) {
+                    opts[o] = $("#" + o).is(":checked");
+                });
+                opts.mode = "hide";
+                filterFunc.call(tree, match, opts);
+            }).focus();
+
+
+            $("input[name=record-search]").keyup(function (e) {
+                var n,
+                    tree = $.ui.fancytree.getTree(),
+                    args = "autoApply autoExpand fuzzy hideExpanders highlight leavesOnly nodata".split(
+                        " "),
+                    opts = {},
+                    filterFunc = tree.filterNodes,
+                    match = $(this).val();
+
+                $.each(args, function (i, o) {
+                    opts[o] = $("#" + o).is(":checked");
+                });
+                opts.mode = "hide";
+                filterFunc.call(tree, match, opts);
+            }).focus();
+
+            // Select a node on click
+            $("#execute").click(function () {
+                var tree = $("#tree").fancytree("getTree");
+                var nodes = tree.getSelectedNodes();
+                var url = "{{url_for('main.async_execute')}}";
+                for (var i = 0; i < nodes.length; i++) {
+                    if (!nodes[i].folder) {
+                        $.post(url, {
+                            "caseName": nodes[i].key
+                        }, function (data, status, request) {
+
+                        });
+                    }
+                }
+                $('#selectCaseModal').modal('hide');
+                window.location.reload();
+            });
+
+            function update_progress(status_url, task_id) {
+                $.ajax({
+                    url: status_url,
+                    type: "GET",
+                    data: {
+                        "task_id": task_id
+                    },
+                    success: function (data) {
+                        if (data['state'] == 'SUCCESS') {
+                            $.post("{{url_for('main.update_task')}}", data = {
+                                "status": data['state'],
+                                "task_id": task_id,
+                                "end_time": data['end_time']
+                            });
+                            //window.location.reload();
+                            $("td:contains(" + task_id + ")").prev().text(data['end_time']);
+
+                            var statusElement = $("td:contains(" + task_id + ")").next();
+
+                            statusElement.text(data['status']);
+
+                        } else {
+                            setTimeout(function () {
+                                update_progress(status_url, task_id);
+                            }, 2000);
+                        }
+                    }
+
+
+                })
+                /*
+                $.get(status_url, function(data){
+                    if (data['state'] == 'SUCCESS'){
+                        var progressEelem = syncElem.parent().next(".executionSection").find(".progress");
+                        progressEelem.remove();
+                        var res = '<span class="executionStatus"><a href="#" ><i class="far fa-file-alt"></i></a></span>'.replace("#","http://127.0.0.1:9900/browse/1233")
+                        syncElem.parent().next(".executionSection").append(res)
+                        }
+                    else {
+                        setTimeout(function(){
+                            update_progress(status_url, syncElem);
+                        },2000);
+                    }
+                });
+                */
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>

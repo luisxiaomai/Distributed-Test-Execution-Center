@@ -1,0 +1,10 @@
+# Windows:
+
+# Python:
+*.pyc
+venv
+app/store/TestApp-master
+
+# My configurations:
+.vscode
+__pycache__
