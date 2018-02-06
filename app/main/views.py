@@ -31,10 +31,11 @@ def records():
 
 @main.route("/async_execute", methods=["POST"])
 def async_execute():
-    name = request.form["caseName"]
-    task = task1.executepuppeteer.delay(name)
-    print("return task id %s"%task.id)
-    record = Record(name=name, task_id=task.id,start_time=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),status="in_process")
+    caseList = request.get_json()["caseList"]
+    print(caseList)
+    #caseList = request.form.getlist("caseList[]")
+    task = task1.executepuppeteer.delay(caseList)
+    record = Record(task_id=task.id,start_time=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),status="in_process")
     db.session.add(record)    
     return jsonify({}), 202, {'Location':url_for("main.task_status",task_id=task.id)}
 
@@ -47,6 +48,12 @@ def task_status():
         response = {
             'state':task.state,
             'status':'Pending...'
+        }
+    elif task.state == 'PROGRESS':
+         response = {
+            'state': task.state,
+            'current': task.info.get('current', 0),
+            'total': task.info.get('total', 1),
         }
     elif task.state == 'SUCCESS':
         response = {
@@ -65,9 +72,11 @@ def task_status():
 def update_task():
     task_id = request.form["task_id"]
     end_time = request.form["end_time"]
+    log_path = request.form["log_path"]
     record = Record.query.filter_by(task_id=task_id).first()
     record.status = request.form["status"]
     record.end_time = end_time
+    record.log_path = log_path
     db.session.add(record)
     return jsonify(status="ok")
 

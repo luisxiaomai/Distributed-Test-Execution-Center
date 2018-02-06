@@ -11,3 +11,14 @@
   padding-top: 0.68em;
   margin-left: 1em;
 }
+.status, .report-div{
+  text-align: center;
+}
+
+.status .success-div{
+  color: #94d82d;
+}
+
+.status .failed-div{
+  color: #f03e3e;
+}
