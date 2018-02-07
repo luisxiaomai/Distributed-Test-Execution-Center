@@ -5,7 +5,7 @@
 
 **Done**
 - Execution history with search feature
-- Case selection with feature
+- Case selection with search feature
 - Parell execution
 - Status check
 - Log Path
