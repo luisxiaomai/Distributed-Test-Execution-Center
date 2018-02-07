@@ -4,9 +4,11 @@
 <div align=center ><img src="https://github.com/luisxiaomai/Images/blob/master/Distributed_Test_Center/testcenter.gif"/></div>
 
 **Done**
+- Execution history with search feature
+- Case selection with feature
 - Parell execution
 - Status check
-- Case selection
+- Log Path
 
 **Todo**
 - Execution failure handle
