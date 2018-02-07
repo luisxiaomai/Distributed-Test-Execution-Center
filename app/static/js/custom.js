@@ -20,7 +20,7 @@ var table = $('#recordsTable').DataTable({
                     data[i].status = progress_bar_div;
                 } else if (data[i].status.toLowerCase() == "success") {
                     data[i].status = success_div;
-                } else if (data[i].status.toLowerCase() == "failed") {
+                } else if (data[i].status.toLowerCase() == "failure") {
                     data[i].status = failed_div;
                 }
                 if (data[i].log_path != null) {
@@ -244,6 +244,22 @@ function update_progress(status_url, task_id) {
                 var statusElement = $("td:contains(" + task_id + ")").next();
                 statusElement.empty();
                 statusElement.append(success_div);
+                var logElement = statusElement.next();
+                logElement.append('<div class="report-div"><a href="' + data['log_path'] + '"><i class="far fa-file-alt"></i></a></div>');
+
+
+            } else if (data['state'] == 'FAILURE') {
+                $.post("/update_task", data = {
+                    "status": data['state'],
+                    "task_id": task_id,
+                    "end_time": data['end_time'],
+                    "log_path": data['log_path']
+                });
+                //window.location.reload();
+                $("td:contains(" + task_id + ")").prev().text(data['end_time']);
+                var statusElement = $("td:contains(" + task_id + ")").next();
+                statusElement.empty();
+                statusElement.append(failed_div);
                 var logElement = statusElement.next();
                 logElement.append('<div class="report-div"><a href="' + data['log_path'] + '"><i class="far fa-file-alt"></i></a></div>');
 

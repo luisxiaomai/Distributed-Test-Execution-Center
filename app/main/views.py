@@ -65,7 +65,9 @@ def task_status():
     else:
         response = {
             'state':task.state,
-            'status':str(task.info)
+            'status':str(task.info),
+            'end_time':datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+            'log_path':"#"
         }
     return jsonify(response)
 

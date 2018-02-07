@@ -15,4 +15,5 @@
 - Execution failure handle
 - Jenkins job execution integration
 - Execution record details page
+- Deployment
 
