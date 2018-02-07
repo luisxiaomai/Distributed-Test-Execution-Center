@@ -1,5 +1,5 @@
-# Distributed testing execution center 
-![projectStatus](https://img.shields.io/badge/status-In--Development-red.svg)
+# Distributed testing execution center  ![projectStatus](https://img.shields.io/badge/status-In--Development-red.svg)
+
 
 <div align=center ><img src="https://github.com/luisxiaomai/Images/blob/master/Distributed_Test_Center/testcenter.gif"/></div>
 
