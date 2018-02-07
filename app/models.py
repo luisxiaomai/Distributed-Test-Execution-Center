@@ -4,20 +4,19 @@ from datetime import datetime
 class Record(db.Model):
     __tableName_ = "Record"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    owner= db.Column(db.String(64))
+    test_cases = db.Column(db.String(64))
+    owner= db.Column(db.String(64), default="test")
     start_time = db.Column(db.String(64))
     end_time = db.Column(db.String(64))
     status = db.Column(db.String(64))
     log_path = db.Column(db.String(64))
     task_id = db.Column(db.String(64))
-    def __repr__(self):
-        return "<Record %r>"%self.name
+
     
     def to_json(self):
         return {
             'id':self.id,
-            'name':self.name,
+            'test_cases':self.test_cases,
             'owner':self.owner,
             'start_time':self.start_time,
             'end_time':self.end_time,

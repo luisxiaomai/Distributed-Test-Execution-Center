@@ -1,6 +1,6 @@
 var success_div = '<div class="success-div"><i class="fas fa-check-circle"></i></div>';
 var failed_div = '<div class="failed-div"><i class="fas fa-times-circle"></i></div>';
-var progress_bar_div = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div></div>';
+var progress_bar_div = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  aria-valuemin="0" aria-valuemax="100" style="width: 0%; font-size:0.8em"></div></div>';
 
 var table = $('#recordsTable').DataTable({
     "dom": 'rt<"bottom"ilp><"clear">',
@@ -24,7 +24,7 @@ var table = $('#recordsTable').DataTable({
                     data[i].status = failed_div;
                 }
                 if (data[i].log_path != null) {
-                    data[i].log_path = '<div class="report-div"><a href="'+ data[i].log_path +'"><i class="far fa-file-alt"></i></a></div>'
+                    data[i].log_path = '<div class="report-div"><a href="' + data[i].log_path + '"><i class="far fa-file-alt"></i></a></div>'
                 }
             }
             return data;
@@ -36,7 +36,7 @@ var table = $('#recordsTable').DataTable({
             "data": "id"
         },
         {
-            "data": "name"
+            "data": "test_cases"
         },
         {
             "data": "owner"
@@ -58,6 +58,14 @@ var table = $('#recordsTable').DataTable({
         }
     ],
     "columnDefs": [{
+            "targets": 1,
+            "width": "15%",
+
+            render: function (data, type, row) {
+                var cases = data.length > 25 ? data.substr(0, 25) + '…' : data;
+                return '<button type="button" class="case btn btn-secondary" data-toggle="tooltip" data-placement="right" title=' + data + '>' + cases + '</button>'
+            }
+        }, {
             "targets": 5,
             "createdCell": function (td, cellData, rowData, row, col) {
                 $(td).addClass('task_id')
@@ -65,14 +73,19 @@ var table = $('#recordsTable').DataTable({
         },
         {
             "targets": 6,
+            "width": "10%",
             "createdCell": function (td, cellData, rowData, row, col) {
                 $(td).addClass('status')
             }
-
         }
     ],
 
 })
+
+table.on('draw', function () {
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
 $('#recordSearch').keyup(function () {
     table.search($(this).val()).draw();
 })
@@ -215,6 +228,7 @@ function update_progress(status_url, task_id) {
                 var progressBar = $("td:contains(" + task_id + ")").next().find('.progress-bar');
                 percent = parseInt(data['current'] * 100 / data['total']);
                 progressBar.width(percent + "%");
+                progressBar.text(percent + "%");
                 setTimeout(function () {
                     update_progress(status_url, task_id);
                 }, 2000);
@@ -231,7 +245,7 @@ function update_progress(status_url, task_id) {
                 statusElement.empty();
                 statusElement.append(success_div);
                 var logElement = statusElement.next();
-                logElement.append('<div class="report-div"><a href="'+ data['log_path']+'"><i class="far fa-file-alt"></i></a></div>');
+                logElement.append('<div class="report-div"><a href="' + data['log_path'] + '"><i class="far fa-file-alt"></i></a></div>');
 
 
             } else {

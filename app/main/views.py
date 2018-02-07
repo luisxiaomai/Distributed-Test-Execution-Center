@@ -33,9 +33,10 @@ def records():
 def async_execute():
     caseList = request.get_json()["caseList"]
     print(caseList)
+
     #caseList = request.form.getlist("caseList[]")
     task = task1.executepuppeteer.delay(caseList)
-    record = Record(task_id=task.id,start_time=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),status="in_process")
+    record = Record(test_cases=','.join(str(case) for case in caseList),task_id=task.id,start_time=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),status="in_process")
     db.session.add(record)    
     return jsonify({}), 202, {'Location':url_for("main.task_status",task_id=task.id)}
 

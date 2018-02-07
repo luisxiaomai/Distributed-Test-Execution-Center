@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>App Store Admin</title>
+    <title>Distributed Test Execution Center</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.png') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename = 'favicon.png') }}" type="image/x-icon">
     <link type="text/css" rel="stylesheet" href="static/css/bootstrap.min.css">
@@ -94,7 +94,7 @@
                 <thead class="thead-light">
                     <tr>
                         <th>id</th>
-                        <th>name</th>
+                        <th>test cases</th>
                         <th>owner</th>
                         <th>start time</th>
                         <th>end time</th>
@@ -173,7 +173,7 @@
                         "data": "id"
                     },
                     {
-                        "data": "name"
+                        "data": "test_cases"
                     },
                     {
                         "data": "owner"
