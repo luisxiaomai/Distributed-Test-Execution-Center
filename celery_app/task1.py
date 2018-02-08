@@ -6,7 +6,7 @@ def add(x,y):
     time.sleep(5)
     return x+y
 
-@cel.task(bind=True, time_limit=20)
+@cel.task(bind=True, time_limit=3600)
 def executepuppeteer(self,caseList):
     print(caseList)
     time.sleep(5)

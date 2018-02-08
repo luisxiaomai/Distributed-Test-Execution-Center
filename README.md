@@ -9,11 +9,13 @@
 - Parell execution
 - Status check
 - Log Path
+- Task level failure handle
+- Task timeout
 
 **Todo**
-- Task timeout
-- Execution failure handle
+- Case level failure handle
 - Jenkins job execution integration
 - Execution record details page
 - Deployment
+- Server side processing
 

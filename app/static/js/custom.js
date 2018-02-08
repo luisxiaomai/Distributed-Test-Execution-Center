@@ -1,5 +1,5 @@
 var success_div = '<div class="success-div"><i class="fas fa-check-circle"></i></div>';
-var failed_div = '<div class="failed-div"><i class="fas fa-times-circle"></i></div>';
+var failed_div = '<div class="failed-div" data-toggle="tooltip" data-placement="top" title="failure"><i class="fas fa-times-circle"></i></div>';
 var progress_bar_div = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  aria-valuemin="0" aria-valuemax="100" style="width: 0%; font-size:0.8em"></div></div>';
 
 var table = $('#recordsTable').DataTable({
@@ -21,7 +21,8 @@ var table = $('#recordsTable').DataTable({
                 } else if (data[i].status.toLowerCase() == "success") {
                     data[i].status = success_div;
                 } else if (data[i].status.toLowerCase() == "failure") {
-                    data[i].status = failed_div;
+                    var failure_div = failed_div.replace("failure", data[i].message);
+                    data[i].status = failure_div;
                 }
                 if (data[i].log_path != null) {
                     data[i].log_path = '<div class="report-div"><a href="' + data[i].log_path + '"><i class="far fa-file-alt"></i></a></div>'
@@ -29,6 +30,7 @@ var table = $('#recordsTable').DataTable({
             }
             return data;
         }
+
 
 
     },
@@ -145,22 +147,17 @@ $('#selectCaseModal').on('show.bs.modal', function (e) {
             leavesOnly: false, // Match end nodes only
             nodata: true, // Display a 'no data' status node if result is empty
             mode: "hide" // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
-
         },
         checkbox: true,
         selectMode: 3,
         source: {
             url: "/cases"
-        },
-        activate: function (event, data) {
-            $("#statusLine").text(event.type + ": " + data.node);
-        },
-        select: function (event, data) {
-            $("#statusLine").text(event.type + ": " + data.node.isSelected() +
-                " " + data.node);
         }
+
     });
+
 })
+
 
 
 
@@ -203,13 +200,37 @@ $("#execute").click(function () {
                 "caseList": executingCases
             }),
             contentType: "application/json; charset=utf-8",
-            success: function (data) {}
+            success: function (data) {
+                $('#selectCaseModal').modal('hide');
+                //window.location.reload();
+                var executionRecord = data["executionRecord"][0];
+                $.each(executionRecord, function () {
+                    var key = Object.keys(this)[0];
+                    var value = this[key];
+                });
+                table.row.add({
+                    "id": executionRecord.id,
+                    "test_cases": executionRecord.test_cases,
+                    "owner": executionRecord.owner,
+                    "start_time": executionRecord.start_time,
+                    "end_time": null,
+                    "task_id": executionRecord.task_id,
+                    "status": progress_bar_div,
+                    "log_path": null,
+                }).draw(false);
+                update_progress("/task_status", executionRecord["task_id"]);
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('.alert .modal-body').empty();
+                $('.alert .modal-body').prepend(jqXHR.statusText);
+                $('.alert').modal("show");
+            }
         })
-        //$.post(url, {"caseList": executingCases}, function (data, status, request) {});
-        $('#selectCaseModal').modal('hide');
-        window.location.reload();
+
+
     } else if (count > 5) {
-        $('.alert .modal-header').prepend('<div style="font-size:1.5em; color:red" id="Title"><i class="fas fa-exclamation-triangle "></i></div>');
+        $('.alert .modal-body').empty();
         $('.alert .modal-body').prepend('<p>Do not choose more than 5 cases each time!</p>');
         $('.alert').modal("show");
     }
@@ -234,7 +255,7 @@ function update_progress(status_url, task_id) {
                 }, 2000);
             } else if (data['state'] == 'SUCCESS') {
                 $.post("/update_task", data = {
-                    "status": data['state'],
+                    "state": data['state'],
                     "task_id": task_id,
                     "end_time": data['end_time'],
                     "log_path": data['log_path']
@@ -246,11 +267,10 @@ function update_progress(status_url, task_id) {
                 statusElement.append(success_div);
                 var logElement = statusElement.next();
                 logElement.append('<div class="report-div"><a href="' + data['log_path'] + '"><i class="far fa-file-alt"></i></a></div>');
-
-
             } else if (data['state'] == 'FAILURE') {
                 $.post("/update_task", data = {
-                    "status": data['state'],
+                    "state": data['state'],
+                    "message": data['status'],
                     "task_id": task_id,
                     "end_time": data['end_time'],
                     "log_path": data['log_path']
@@ -259,10 +279,11 @@ function update_progress(status_url, task_id) {
                 $("td:contains(" + task_id + ")").prev().text(data['end_time']);
                 var statusElement = $("td:contains(" + task_id + ")").next();
                 statusElement.empty();
-                statusElement.append(failed_div);
+                var failure_div = failed_div.replace("failure", data['message']);
+                statusElement.append(failure_div);
+                $('[data-toggle="tooltip"]').tooltip();
                 var logElement = statusElement.next();
                 logElement.append('<div class="report-div"><a href="' + data['log_path'] + '"><i class="far fa-file-alt"></i></a></div>');
-
 
             } else {
                 setTimeout(function () {

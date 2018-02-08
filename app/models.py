@@ -10,6 +10,7 @@ class Record(db.Model):
     end_time = db.Column(db.String(64))
     status = db.Column(db.String(64))
     log_path = db.Column(db.String(64))
+    message = db.Column(db.String())
     task_id = db.Column(db.String(64))
 
     
@@ -23,4 +24,5 @@ class Record(db.Model):
             'status':self.status,
             'log_path':self.log_path,
             'task_id':self.task_id,
+            'message':self.message
         }
