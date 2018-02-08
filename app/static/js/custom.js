@@ -6,6 +6,8 @@ var table = $('#recordsTable').DataTable({
     "dom": 'rt<"bottom"ilp><"clear">',
     "pageLength": 15,
     "lengthMenu": [15, 30, 60],
+    "serverSide": true,
+    "processing": true,
     "order": [
         [0, "desc"]
     ],

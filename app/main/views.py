@@ -23,12 +23,19 @@ def runnigRecords():
 
 @main.route("/records", methods=["GET"])
 def records():
-    #draw = int(request.args.get("draw"))
-    recordList = Record.query.all()
+    draw = int(request.args.get("draw"))
+    start = int(request.args.get("start"))
+    length =  int(request.args.get("length"))
+    recordList = Record.query.order_by(Record.id.desc()).all()
     temp = []
-    for x in recordList:
-        temp.append(x.to_json())
-    return jsonify(data = temp )
+    count = 0
+    if len(recordList)-start >15:
+        for i in range(length):
+            temp.append(recordList[start+i].to_json())
+    else:
+        for i in range(len(recordList)-start):
+            temp.append(recordList[start+i].to_json())       
+    return jsonify(draw = draw, recordsTotal=len(recordList),recordsFiltered=len(recordList),data = temp )
 
 @main.route("/async_execute", methods=["POST"])
 def async_execute():
