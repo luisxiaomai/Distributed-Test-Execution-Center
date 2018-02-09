@@ -11,7 +11,7 @@
 - Log Path
 - Task level failure handle
 - Task timeout
-_ Server side processing with pagination, sort, filter
+- Server side processing with pagination, sort, filter
 
 **Todo**
 - Case level failure handle
