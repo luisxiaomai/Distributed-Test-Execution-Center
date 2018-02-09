@@ -26,16 +26,28 @@ def records():
     draw = int(request.args.get("draw"))
     start = int(request.args.get("start"))
     length =  int(request.args.get("length"))
-    recordList = Record.query.order_by(Record.id.desc()).all()
+    order_column_index = request.args.get("order[0][column]")
+    order_seq = request.args.get("order[0][dir]")
+    searchValue =request.args.get("search[value]") 
+    sort_map = {0:Record.id, 3:Record.start_time,4:Record.end_time}   
+    totalRecordList = Record.query.all() 
+    #sort
+    sort_item = sort_map.get(int(order_column_index))
+    if searchValue:
+        print(searchValue)
+        recordList = Record.query.filter(Record.id.like("%"+searchValue+"%") | Record.test_cases.like("%"+searchValue+"%") | Record.owner.like("%"+searchValue+"%") |
+                                         Record.start_time.like("%"+searchValue+"%") | Record.status.like("%"+searchValue+"%") ).order_by(Record.id.desc()).all()
+    else:
+        recordList = Record.query.order_by("%s %s"%(sort_item,order_seq)).all()
+    print(recordList)
     temp = []
-    count = 0
-    if len(recordList)-start >15:
+    if len(recordList)-start >length:
         for i in range(length):
             temp.append(recordList[start+i].to_json())
     else:
         for i in range(len(recordList)-start):
             temp.append(recordList[start+i].to_json())       
-    return jsonify(draw = draw, recordsTotal=len(recordList),recordsFiltered=len(recordList),data = temp )
+    return jsonify(draw = draw, recordsTotal=len(totalRecordList),recordsFiltered=len(recordList),data = temp )
 
 @main.route("/async_execute", methods=["POST"])
 def async_execute():
@@ -43,7 +55,7 @@ def async_execute():
     print(caseList)
     #caseList = request.form.getlist("caseList[]")
     task = task1.executepuppeteer.delay(caseList)
-    record = Record(test_cases=','.join(str(case) for case in caseList),task_id=task.id,start_time=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),status="in_process")
+    record = Record(test_cases=','.join(str(case) for case in caseList),task_id=task.id,start_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),status="in_process")
     db.session.add(record)    
     executionRecord = Record.query.filter_by(task_id=task.id).all()
     temp = []
@@ -70,14 +82,14 @@ def task_status():
     elif task.state == 'SUCCESS':
         response = {
             'state':task.state,
-            'end_time':datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+            'end_time':datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         response.update(task.result)
     else:
         response = {
             'state':task.state,
             'status':str(task.info),
-            'end_time':datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+            'end_time':datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'log_path':"#"
         }
     return jsonify(response)

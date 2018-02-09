@@ -8,6 +8,9 @@ var table = $('#recordsTable').DataTable({
     "lengthMenu": [15, 30, 60],
     "serverSide": true,
     "processing": true,
+    "language": {
+        "processing": '<div style="color:#2089e6"><i class="fa fa-spinner fa-spin" style="font-size:36px"></i></div>'
+    },
     "order": [
         [0, "desc"]
     ],
@@ -62,14 +65,18 @@ var table = $('#recordsTable').DataTable({
         }
     ],
     "columnDefs": [{
+            "targets": [1, 2, 5, 6, 7], // column or columns numbers
+            "orderable": false, // set orderable for selected columns
+        },
+        {
             "targets": 1,
             "width": "15%",
-
             render: function (data, type, row) {
                 var cases = data.length > 25 ? data.substr(0, 25) + '…' : data;
                 return '<button type="button" class="case btn btn-secondary" data-toggle="tooltip" data-placement="right" title=' + data + '>' + cases + '</button>'
             }
-        }, {
+        },
+        {
             "targets": 5,
             "createdCell": function (td, cellData, rowData, row, col) {
                 $(td).addClass('task_id')

@@ -11,11 +11,11 @@
 - Log Path
 - Task level failure handle
 - Task timeout
+_ Server side processing with pagination, sort, filter
 
 **Todo**
 - Case level failure handle
 - Jenkins job execution integration
 - Execution record details page
 - Deployment
-- Server side processing
 
