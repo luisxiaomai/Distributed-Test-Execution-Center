@@ -5,6 +5,7 @@
 ## Local Run
 
   [Python 3+](https://www.python.org/downloads/) need be installed
+  
   [Redis](https://redis.io/) need be installed
 
   Install dependencies
@@ -13,7 +14,7 @@
   ```
   Launch distributed task worker
   ```
-  celery  -A celery_app worker --loglevel=info
+  celery  -A celery8_app worker --loglevel=info
   ```
   Launch server
   ```	
@@ -35,5 +36,5 @@
 - Case level failure handle
 - Jenkins job execution integration
 - Execution record details page
-- Deployment
+- Optimize deployment, dockerlize
 
