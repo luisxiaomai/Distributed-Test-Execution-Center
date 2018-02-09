@@ -1,17 +1,23 @@
 from flask import render_template, send_from_directory, request, jsonify, redirect, url_for, make_response, send_file, current_app
 from ..models import Record
 from ..utils import path_to_dict
-from .. import db
+from .. import db, cases_folder
 from . import main
 import os, time, shutil, glob, subprocess, threading
 from subprocess import call
 from celery_app import task1
 from datetime import datetime
+from sqlalchemy import desc, asc
 
 @main.route("/", methods=["GET","POST"])
 def index():
     recordList = Record.query.all()
+    print(cases_folder)
     return render_template("index.html",recordList=recordList)
+
+@main.route("/details", methods=["GET","POST"])
+def details():
+    return render_template("detailsExecution.html")
 
 @main.route("/runnigRecords", methods=["GET"])
 def runnigRecords():
@@ -34,12 +40,10 @@ def records():
     #sort
     sort_item = sort_map.get(int(order_column_index))
     if searchValue:
-        print(searchValue)
         recordList = Record.query.filter(Record.id.like("%"+searchValue+"%") | Record.test_cases.like("%"+searchValue+"%") | Record.owner.like("%"+searchValue+"%") |
                                          Record.start_time.like("%"+searchValue+"%") | Record.status.like("%"+searchValue+"%") ).order_by(Record.id.desc()).all()
     else:
-        recordList = Record.query.order_by("%s %s"%(sort_item,order_seq)).all()
-    print(recordList)
+        recordList = Record.query.order_by(desc(sort_item)).all() if order_seq == "desc" else Record.query.order_by(asc(sort_item)).all()
     temp = []
     if len(recordList)-start >length:
         for i in range(length):
@@ -115,5 +119,5 @@ def tree():
 @main.route("/cases",methods=["GET"])
 def cases():
     json_d = []
-    json_d.append(path_to_dict('/Users/i072687/Desktop/cases'))
+    json_d.append(path_to_dict(cases_folder))
     return  jsonify(json_d)

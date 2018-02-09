@@ -1,9 +1,11 @@
 from config import config
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import os
 #from werkzeug.contrib.fixers import ProxyFix
 
 db = SQLAlchemy()
+cases_folder = os.path.join(os.path.abspath(os.path.dirname(__file__)),"cases")
 
 def create_app(config_name):
     app = Flask(__name__)
