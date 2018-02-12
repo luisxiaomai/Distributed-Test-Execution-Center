@@ -17,6 +17,8 @@ def index():
 
 @main.route("/details", methods=["GET","POST"])
 def details():
+    record_id = request.args.get("id",0)
+    record = Record.query.get_or_404(record_id)
     return render_template("detailsExecution.html")
 
 @main.route("/runnigRecords", methods=["GET"])

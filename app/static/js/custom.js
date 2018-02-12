@@ -32,11 +32,12 @@ var table = $('#recordsTable').DataTable({
                 if (data[i].log_path != null) {
                     data[i].log_path = '<div class="report-div"><a href="' + data[i].log_path + '"><i class="far fa-file-alt"></i></a></div>'
                 }
+                if (data[i].id != null) {
+                    data[i].id = '<a  target="_blank" href="/details?id='+data[i].id+'">'+data[i].id+'</a>'
+                }
             }
             return data;
         }
-
-
 
     },
     "columns": [{

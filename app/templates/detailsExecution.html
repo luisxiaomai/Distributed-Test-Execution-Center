@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <title>Details</title>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename = 'favicon.png') }}" type="image/x-icon">
+    <link type="text/css" rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/static/fancytree/skin-win8/ui.fancytree.min.css">
+
+    <style>
+        .table-title {
+            padding-bottom: 15px;
+            background: #435d7d;
+            color: #fff;
+            padding: 16px 30px;
+            border-radius: 3px 3px 0 0;
+        }
+
+        #treetable {
+            border: 0;
+            outline: 0;
+            /* No focus frame */
+        }
+    </style>
+
+
+    <body>
+
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>Execution Details</h2>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control w-25 float-right " name="caseSearch" placeholder="search">
+                </div>
+            </div>
+        </div>
+        <!-- Add a <table> element where the tree should appear: -->
+        <table id="treetable" class="table table-sm table-bordered">
+
+            <thead>
+                <tr>
+                    <th>TestSetTree</th>
+                    <th>Platform</th>
+                    <th>LastSubmitter</th>
+                    <th>Status</th>
+                    <th>LogPath</th>
+                    <th>JenkinsBuildNo</th>
+                    <th>FailReason</th>
+                    <th>StartTime</th>
+                    <th>EndTime</th>
+
+                </tr>
+            </thead>
+            <tbody>
+        
+            </tbody>
+        </table>
+
+        <script src="static/js/jquery-3.2.1.min.js"></script>
+        <script src="static/js/bootstrap.min.js"></script>
+        <script src="/static/fancytree/jquery.fancytree-all-deps.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $("#treetable").fancytree({
+                    extensions: ["table", "filter"],
+                    selectMode: 3,
+                    quicksearch: true,
+                    focusOnSelect: false,
+                    filter: {
+                        autoApply: true, // Re-apply last filter if lazy data is loaded
+                        autoExpand: false, // Expand all branches that contain matches while filtered
+                        counter: true, // Show a badge with number of matching child nodes near parent icons
+                        fuzzy: false, // Match single characters in order, e.g. 'fb' will match 'FooBar'
+                        hideExpandedCounter: true, // Hide counter badge if parent is expanded
+                        hideExpanders: false, // Hide expanders if all child nodes are hidden by filter
+                        highlight: true, // Highlight matches by wrapping inside <mark> tags
+                        leavesOnly: false, // Match end nodes only
+                        nodata: true, // Display a 'no data' status node if result is empty
+                        mode: "hide" // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+                    },
+                    focusOnSelect: false,
+
+                    table: {
+                        indentation: 20, // indent 20px per node level
+                        nodeColumnIdx: 0, // render the node title into the 2nd column
+                        checkboxColumnIdx: 0 // render the checkboxes into the 1st column
+                    },
+                    source: [{
+                        'title': '1233',
+                        'folder': true,
+                        'expanded': true,
+                        'children': [{
+                            'title': '333',
+                            'folder': true,
+                            'expanded': true,
+                            'children': [{
+                                'title': 'test1.js',
+                                'platfrom': 'chrome',
+                                'LastSubmitter': 'test',
+                                'Status': 'success',
+                                'LogPath': 'folder',
+                                'JenkinsBuildNo': 1,
+                                'FailReason': '',
+                                'StartTime': '',
+                                'EndTime': ''
+                            }]
+                        }]
+                    }],
+                    renderColumns: function (event, data) {
+                        var node = data.node,
+                            data = node.data,
+                            $tdList = $(node.tr).find(">td");
+
+                        $tdList.eq(3).text(data.platform);
+                        $tdList.eq(2).text(data.platform);
+                    }
+                });
+
+                $.ui.fancytree.getTree(0).visit(function (node) {
+                    node.setExpanded();
+                });
+
+                $("input[name=caseSearch]").keyup(function (e) {
+                    var n,
+                        tree = $.ui.fancytree.getTree(0),
+                        args = "autoApply autoExpand fuzzy hideExpanders highlight leavesOnly nodata".split(
+                            " "),
+                        opts = {},
+                        filterFunc = tree.filterNodes,
+                        match = $(this).val();
+
+                    filterFunc.call(tree, match, opts);
+                }).focus();
+
+            })
+        </script>
+
+    </body>
+
+</html>
