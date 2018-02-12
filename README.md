@@ -5,7 +5,7 @@
 ## Local Run
 
   [Python 3+](https://www.python.org/downloads/) need be installed
-  
+
   [Redis](https://redis.io/) need be installed
 
   Install dependencies
@@ -14,7 +14,13 @@
   ```
   Launch distributed task worker
   ```
-  celery  -A celery8_app worker --loglevel=info
+  celery  -A celery_app worker --loglevel=info
+  ```
+  Test Task Execution Definition
+  
+  > For demo purpose, I defined **executepuppeteer** task in celery_app/task1.py. [Node,Npm](  https://nodejs.org/en/download/) need be installed
+  ```	
+    npm i --save puppeteer
   ```
   Launch server
   ```	
@@ -22,7 +28,7 @@
   ```
   Navigate to http://127.0.0.1:5000
 
-**Done**
+## Done
 - Execution history with search feature
 - Case selection with search feature
 - Parell execution
@@ -32,7 +38,7 @@
 - Task timeout
 - Server side processing with pagination, sort, filter
 
-**Todo**
+## Todo
 - Case level failure handle
 - Jenkins job execution integration
 - Execution record details page
