@@ -1,3 +1,5 @@
+
+
 import os
 from . import cases_folder
 
@@ -10,13 +12,26 @@ def path_to_dict(path):
     d["key"]=os.path.relpath(path,cases_folder)
     return d
 
-
 def toJson(caseString):
-    iter = caseString.split("/", 1)
-    d = {'title':iter[0]}
-    if len(iter)>1 :
-        d['folder'] =True
-        d['expanded'] = True
-        d['children'] = [toJson(iter[1])]
-
-    return d
+    output = []
+    casesList = caseString.split(",")
+    for item in casesList:
+        chain = item.split('/')
+        currentNode = output
+        for index,node in enumerate(chain):
+            wantedNode = node
+            lastNode = currentNode
+            i = 0
+            for x in range(i,len(currentNode)):
+                i = x + 1
+                if currentNode[x]["title"] == wantedNode:
+                    currentNode = currentNode[x]["children"]
+                    break
+            if lastNode == currentNode:
+                if '.' in wantedNode:
+                    currentNode.insert(i,{"title":wantedNode,"children":[]}) 
+                else:
+                    currentNode.insert(i,{"title":wantedNode,"folder":True,"expanded":True,"children":[]}) 
+                newNode = currentNode[i]
+                currentNode = newNode["children"]
+    return output

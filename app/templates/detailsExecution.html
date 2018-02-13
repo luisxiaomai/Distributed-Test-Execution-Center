@@ -57,7 +57,7 @@
                 </tr>
             </thead>
             <tbody>
-        
+
             </tbody>
         </table>
 
@@ -91,27 +91,9 @@
                         nodeColumnIdx: 0, // render the node title into the 2nd column
                         checkboxColumnIdx: 0 // render the checkboxes into the 1st column
                     },
-                    source: [{
-                        'title': '1233',
-                        'folder': true,
-                        'expanded': true,
-                        'children': [{
-                            'title': '333',
-                            'folder': true,
-                            'expanded': true,
-                            'children': [{
-                                'title': 'test1.js',
-                                'platfrom': 'chrome',
-                                'LastSubmitter': 'test',
-                                'Status': 'success',
-                                'LogPath': 'folder',
-                                'JenkinsBuildNo': 1,
-                                'FailReason': '',
-                                'StartTime': '',
-                                'EndTime': ''
-                            }]
-                        }]
-                    }],
+                    source: {
+                        url: "/detailsTree?id={{record_id}}"
+                    },
                     renderColumns: function (event, data) {
                         var node = data.node,
                             data = node.data,

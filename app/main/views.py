@@ -1,6 +1,6 @@
 from flask import render_template, send_from_directory, request, jsonify, redirect, url_for, make_response, send_file, current_app
 from ..models import Record
-from ..utils import path_to_dict
+from ..utils import path_to_dict,toJson
 from .. import db, cases_folder
 from . import main
 import os, time, shutil, glob, subprocess, threading
@@ -18,8 +18,13 @@ def index():
 @main.route("/details", methods=["GET","POST"])
 def details():
     record_id = request.args.get("id",0)
+    return render_template("detailsExecution.html", record_id = record_id)
+
+@main.route("/detailsTree", methods=["GET","POST"])
+def detailsTree():
+    record_id = request.args.get("id")
     record = Record.query.get_or_404(record_id)
-    return render_template("detailsExecution.html")
+    return jsonify(toJson(record.test_cases))
 
 @main.route("/runnigRecords", methods=["GET"])
 def runnigRecords():
@@ -122,4 +127,5 @@ def tree():
 def cases():
     json_d = []
     json_d.append(path_to_dict(cases_folder))
+    print(json_d)
     return  jsonify(json_d)
