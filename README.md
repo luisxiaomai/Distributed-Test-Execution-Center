@@ -6,7 +6,7 @@
 
   [Python 3+](https://www.python.org/downloads/) need be installed
 
-  [Redis](https://redis.io/) need be installed
+  [Redis](https://redis.io/) need be installed and running
 
   Install dependencies
   ```

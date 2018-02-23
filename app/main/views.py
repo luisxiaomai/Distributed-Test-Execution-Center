@@ -24,7 +24,12 @@ def details():
 def detailsTree():
     record_id = request.args.get("id")
     record = Record.query.get_or_404(record_id)
-    return jsonify(toJson(record.test_cases))
+    info = {}
+    info["status"] = record.status
+    info["start_time"] = record.start_time
+    info["end_time"] = record.end_time
+
+    return jsonify(toJson(record.test_cases,info))
 
 @main.route("/runnigRecords", methods=["GET"])
 def runnigRecords():

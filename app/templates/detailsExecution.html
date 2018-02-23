@@ -9,6 +9,7 @@
     <link rel="icon" href="{{ url_for('static', filename = 'favicon.png') }}" type="image/x-icon">
     <link type="text/css" rel="stylesheet" href="static/css/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="/static/fancytree/skin-win8/ui.fancytree.min.css">
+    <link type="text/css" rel="stylesheet" href="static/css/custom.css">
 
     <style>
         .table-title {
@@ -42,7 +43,7 @@
         <!-- Add a <table> element where the tree should appear: -->
         <table id="treetable" class="table table-sm table-bordered">
 
-            <thead>
+            <thead class="thead-light">
                 <tr>
                     <th>TestSetTree</th>
                     <th>Platform</th>
@@ -64,6 +65,7 @@
         <script src="static/js/jquery-3.2.1.min.js"></script>
         <script src="static/js/bootstrap.min.js"></script>
         <script src="/static/fancytree/jquery.fancytree-all-deps.min.js"></script>
+        <script defer src="/static/js/fontawesome-all.min.js"></script>
 
         <script>
             $(document).ready(function () {
@@ -99,8 +101,20 @@
                             data = node.data,
                             $tdList = $(node.tr).find(">td");
 
-                        $tdList.eq(3).text(data.platform);
-                        $tdList.eq(2).text(data.platform);
+                        $tdList.eq(1).text(data.platform);
+                        if (data.status == "in_process") {
+                            $tdList.eq(3).html(
+                                '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  aria-valuemin="0" aria-valuemax="100" style="width: 0%; font-size:0.8em"></div></div>'
+                            );
+                        } else if (data.status == "SUCCESS") {
+                            $tdList.eq(3).html(
+                                '<div class="success-div"><i class="fas fa-check-circle"></i></div>'
+                            );
+
+                        }
+                        $tdList.eq(7).text(data.start_time);
+                        $tdList.eq(8).text(data.end_time);
+
                     }
                 });
 

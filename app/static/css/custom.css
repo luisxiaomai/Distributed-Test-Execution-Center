@@ -12,16 +12,15 @@
   margin-left: 1em;
 }
 
-.status,
-.report-div {
+.success-div,.failed-div,.report-div {
   text-align: center;
 }
 
-.status .success-div {
+.success-div {
   color: #94d82d;
 }
 
-.status .failed-div {
+.failed-div {
   color: #f03e3e;
 }
 

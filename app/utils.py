@@ -12,7 +12,7 @@ def path_to_dict(path):
     d["key"]=os.path.relpath(path,cases_folder)
     return d
 
-def toJson(caseString):
+def toJson(caseString, info):
     output = []
     casesList = caseString.split(",")
     for item in casesList:
@@ -29,7 +29,7 @@ def toJson(caseString):
                     break
             if lastNode == currentNode:
                 if '.' in wantedNode:
-                    currentNode.insert(i,{"title":wantedNode,"children":[]}) 
+                    currentNode.insert(i,{"title":wantedNode,"platform":"chrome","status":info.get("status"),"start_time":info.get("start_time"),"end_time":info.get("end_time"),"children":[]}) 
                 else:
                     currentNode.insert(i,{"title":wantedNode,"folder":True,"expanded":True,"children":[]}) 
                 newNode = currentNode[i]
