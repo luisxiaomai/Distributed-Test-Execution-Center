@@ -33,7 +33,7 @@ var table = $('#recordsTable').DataTable({
                     data[i].log_path = '<div class="report-div"><a href="' + data[i].log_path + '"><i class="far fa-file-alt"></i></a></div>'
                 }
                 if (data[i].id != null) {
-                    data[i].id = '<a  target="_blank" href="/details?id='+data[i].id+'">'+data[i].id+'</a>'
+                    data[i].id = '<a  target="_blank" href="/details?id=' + data[i].id + '">' + data[i].id + '</a>'
                 }
             }
             return data;
@@ -98,9 +98,73 @@ table.on('draw', function () {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
+$('.nav-item.statistics').on("click", function () {
+    $('#recordSearch').hide();
+    $.ajax({
+        url: "/recordStatistics",
+        type: "GET",
+        async: false,
+        success: function (data) {
+            var myChart = echarts.init(document.getElementById('statusPieDiv'));
+
+            var option = {
+                title: {
+                    text: 'Status Summary',
+                    x: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: data.legendData,
+
+                    selected: data.selected
+                },
+                series: [{
+                    name: 'status',
+                    type: 'pie',
+                    radius: '55%',
+                    data: [{
+                            value: data.success_count,
+                            name: 'Success',
+                            itemStyle: {
+                                color: '#28a745'
+                            }
+                        },
+                        {
+                            value: data.failure_count,
+                            name: 'Failure',
+                            itemStyle: {
+                                color: '#dc3545'
+                            }
+                        }
+                    ]
+                }]
+            };
+
+            myChart.setOption(option);
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    })
+
+});
+
+$('.nav-item.history').on("click", function () {
+    $('#recordSearch').show();
+});
+
 $('#recordSearch').keyup(function () {
     table.search($(this).val()).draw();
-})
+});
 
 $.get("/runnigRecords", function (data) {
     for (var i = 0; i < data["runningRecords"].length; i++) {

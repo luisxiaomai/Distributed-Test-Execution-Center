@@ -12,7 +12,9 @@
   margin-left: 1em;
 }
 
-.success-div,.failed-div,.report-div {
+.success-div,
+.failed-div,
+.report-div {
   text-align: center;
 }
 
@@ -27,4 +29,12 @@
 .case.btn {
   background-color: #a2a5a7;
   border-color: #a2a5a7;
+}
+
+#statusPieDiv {
+  background: #ffffff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  border-top: 3px solid #d2d6de;
+  border-top-color: #63a7f1;
+  margin-top: 5px;
 }

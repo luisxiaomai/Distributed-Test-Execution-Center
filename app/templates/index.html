@@ -38,13 +38,14 @@
     <div class="admin container-fluid mt-3">
         <div class="card text-center">
             <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs float-left">
-                    <li class="nav-item ">
-                        <a class="nav-link active" href="#">Execution History</a>
+                <ul class="nav nav-pills float-left" id="pills-tab" role="tablist">
+                    <li class="nav-item history">
+                        <a class="nav-link active" id="pills-history-tab" data-toggle="pill" href="#pills-history" role="tab" aria-controls="pills-history"
+                            aria-selected="true">Execution History</a>
                     </li>
-
-                    <li class="nav-item ">
-                        <a class="nav-link disabled" href="#">Test</a>
+                    <li class="nav-item statistics">
+                        <a class="nav-link" id="pills-statistics-tab" data-toggle="pill" href="#pills-statistics" role="tab" aria-controls="pills-statistics"
+                            aria-selected="false">Statistics</a>
                     </li>
                 </ul>
                 <button id="selectCases" class="btn btn-primary float-right ml-1" data-toggle="modal" data-target="#selectCaseModal">
@@ -53,57 +54,29 @@
                 <input type="text" class="form-control w-25 float-right" id="recordSearch" placeholder="search">
             </div>
         </div>
-        <div class="card table-responsive">
-            {#
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-history" role="tabpanel" aria-labelledby="pills-history-tab">
+                <table id="recordsTable" class="table table-bordered" cellspacing="0" width="100%">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>id</th>
+                            <th>test cases</th>
+                            <th>owner</th>
+                            <th>start time</th>
+                            <th>end time</th>
+                            <th>task id</th>
+                            <th>status</th>
+                            <th>log</th>
 
-            <table class="table table-bordered">
-                <thead class="thead-light">
-                    <tr class="text-center">
-                        <th>ID</th>
-                        <th>Test Case</th>
-                        <th>Owner</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Status</th>
-                        <th>
-                            <i class="fas fa-eye"></i>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="text-center">
-                    {% for record in recordList %}
-                    <tr>
-                        <td>{{record.id}}</td>
-                        <td>{{record.name}}</td>
-                        <td>{{record.owner | default('', true)}}</td>
-                        <td>{{record.start_time}}</td>
-                        <td>{{record.end_time | default('', true)}}</td>
-                        <td>{{record.status}}</td>
-                        <td> {% if record.log_path %}<span class="executionStatus"><a href="{{record.log_path}}" ><i class="far fa-file-alt"></i></a></span>{%
-                            endif %}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        </tr>
+                    </thead>
+                </table>
 
-            #}
+            </div>
+            <div class="tab-pane fade" id="pills-statistics" role="tabpanel" aria-labelledby="pills-statistics-tab">
+                <div class="" id="statusPieDiv" style="width: 600px;height:400px;"></div>
 
-
-            <table id="recordsTable" class="table table-bordered" cellspacing="0" width="100%">
-                <thead class="thead-light">
-                    <tr>
-                        <th>id</th>
-                        <th>test cases</th>
-                        <th>owner</th>
-                        <th>start time</th>
-                        <th>end time</th>
-                        <th>task id</th>
-                        <th>status</th>
-                        <th>log</th>
-
-                    </tr>
-                </thead>
-            </table>
+            </div>
 
         </div>
 
@@ -153,8 +126,10 @@
     <script defer src="/static/js/fontawesome-all.min.js"></script>
     <script src="/static/js/jquery.dataTables.js"></script>
     <script src="/static/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.0.2/echarts.min.js"></script>
+
     <script src="/static/js/custom.js"></script>
-    
+
 </body>
 
 </html>

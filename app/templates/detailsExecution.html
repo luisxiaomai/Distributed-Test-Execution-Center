@@ -14,7 +14,7 @@
     <style>
         .table-title {
             padding-bottom: 15px;
-            background:#a0a7ad;
+            background: #a0a7ad;
             color: #fff;
             padding: 16px 30px;
             border-radius: 3px 3px 0 0;
@@ -70,47 +70,51 @@
         <script>
             $(document).ready(function () {
                 $("#treetable").fancytree({
-                    extensions: ["table", "filter"],
-                    selectMode: 3,
-                    quicksearch: true,
-                    focusOnSelect: false,
-                    filter: {
-                        autoApply: true, // Re-apply last filter if lazy data is loaded
-                        autoExpand: false, // Expand all branches that contain matches while filtered
-                        counter: true, // Show a badge with number of matching child nodes near parent icons
-                        fuzzy: false, // Match single characters in order, e.g. 'fb' will match 'FooBar'
-                        hideExpandedCounter: true, // Hide counter badge if parent is expanded
-                        hideExpanders: false, // Hide expanders if all child nodes are hidden by filter
-                        highlight: true, // Highlight matches by wrapping inside <mark> tags
-                        leavesOnly: false, // Match end nodes only
-                        nodata: true, // Display a 'no data' status node if result is empty
-                        mode: "hide" // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
-                    },
-                    focusOnSelect: false,
+                        extensions: ["table", "filter"],
+                        selectMode: 3,
+                        quicksearch: true,
+                        focusOnSelect: false,
+                        filter: {
+                            autoApply: true, // Re-apply last filter if lazy data is loaded
+                            autoExpand: false, // Expand all branches that contain matches while filtered
+                            counter: true, // Show a badge with number of matching child nodes near parent icons
+                            fuzzy: false, // Match single characters in order, e.g. 'fb' will match 'FooBar'
+                            hideExpandedCounter: true, // Hide counter badge if parent is expanded
+                            hideExpanders: false, // Hide expanders if all child nodes are hidden by filter
+                            highlight: true, // Highlight matches by wrapping inside <mark> tags
+                            leavesOnly: false, // Match end nodes only
+                            nodata: true, // Display a 'no data' status node if result is empty
+                            mode: "hide" // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+                        },
+                        focusOnSelect: false,
 
-                    table: {
-                        indentation: 20, // indent 20px per node level
-                        nodeColumnIdx: 0, // render the node title into the 2nd column
-                        checkboxColumnIdx: 0 // render the checkboxes into the 1st column
-                    },
-                    source: {
-                        url: "/detailsTree?id={{record_id}}"
-                    },
-                    renderColumns: function (event, data) {
-                        var node = data.node,
-                            data = node.data,
-                            $tdList = $(node.tr).find(">td");
+                        table: {
+                            indentation: 20, // indent 20px per node level
+                            nodeColumnIdx: 0, // render the node title into the 2nd column
+                            checkboxColumnIdx: 0 // render the checkboxes into the 1st column
+                        },
+                        source: {
+                            url: "/detailsTree?id={{record_id}}"
+                        },
+                        renderColumns: function (event, data) {
+                            var node = data.node,
+                                data = node.data,
+                                $tdList = $(node.tr).find(">td");
 
-                        $tdList.eq(1).text(data.platform);
-                        if (data.status == "in_process") {
-                            $tdList.eq(3).html(
-                                '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  aria-valuemin="0" aria-valuemax="100" style="width: 0%; font-size:0.8em"></div></div>'
-                            );
-                        } else if (data.status == "SUCCESS") {
-                            $tdList.eq(3).html(
-                                '<div class="success-div"><i class="fas fa-check-circle"></i></div>'
-                            );
+                            $tdList.eq(1).text(data.platform);
+                            if (data.status == "in_process") {
+                                $tdList.eq(3).html(
+                                    '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"  aria-valuemin="0" aria-valuemax="100" style="width: 0%; font-size:0.8em"></div></div>'
+                                );
+                            } else if (data.status == "SUCCESS") {
+                                $tdList.eq(3).html(
+                                    '<div class="success-div"><i class="fas fa-check-circle"></i></div>'
+                                );
 
+                            } else if (data.status == "FAILURE") {
+                                $tdList.eq(3).html(
+                                    '<div class="failed-div" data-toggle="tooltip" data-placement="top" title="failure"><i class="fas fa-times-circle"></i></div>'
+                                );
                         }
                         $tdList.eq(7).text(data.start_time);
                         $tdList.eq(8).text(data.end_time);
@@ -118,21 +122,21 @@
                     }
                 });
 
-                $.ui.fancytree.getTree(0).visit(function (node) {
-                    node.setExpanded();
-                });
+            $.ui.fancytree.getTree(0).visit(function (node) {
+                node.setExpanded();
+            });
 
-                $("input[name=caseSearch]").keyup(function (e) {
-                    var n,
-                        tree = $.ui.fancytree.getTree(0),
-                        args = "autoApply autoExpand fuzzy hideExpanders highlight leavesOnly nodata".split(
-                            " "),
-                        opts = {},
-                        filterFunc = tree.filterNodes,
-                        match = $(this).val();
+            $("input[name=caseSearch]").keyup(function (e) {
+                var n,
+                    tree = $.ui.fancytree.getTree(0),
+                    args = "autoApply autoExpand fuzzy hideExpanders highlight leavesOnly nodata".split(
+                        " "),
+                    opts = {},
+                    filterFunc = tree.filterNodes,
+                    match = $(this).val();
 
-                    filterFunc.call(tree, match, opts);
-                }).focus();
+                filterFunc.call(tree, match, opts);
+            }).focus();
 
             })
         </script>

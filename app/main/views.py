@@ -134,3 +134,10 @@ def cases():
     json_d.append(path_to_dict(cases_folder))
     print(json_d)
     return  jsonify(json_d)
+
+@main.route("/recordStatistics",methods=["GET"])
+def recordStatistics():
+    recordStatistics = {}
+    recordStatistics["success_count"] = Record.query.filter_by(status="SUCCESS").count()
+    recordStatistics["failure_count"] = Record.query.filter_by(status="FAILURE").count()
+    return  jsonify(recordStatistics)
