@@ -37,10 +37,11 @@
 - Task level failure handle
 - Task timeout
 - Server side processing with pagination, sort, filter
+- Execution record details page
+- Statistics page try
 
 ## Todo
 - Case level failure handle
 - Jenkins job execution integration
-- Execution record details page
 - Optimize deployment, dockerlize
-
+- Integrate to one admin system
