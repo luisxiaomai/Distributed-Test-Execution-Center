@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <link type="text/css" rel="stylesheet" href="static/css/execution.css">
+    <link type="text/css" rel="stylesheet" href="/static/fancytree/skin-win8/ui.fancytree.min.css">
+    <link type="text/css" rel="stylesheet" href="/static/css/dataTables.bootstrap4.min.css">
+
+    <style type="text/css">
+        div#tree {
+            min-height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ced4da;
+        }
+
+        ul.fancytree-container {
+            border: 0;
+            outline: 0;
+            /* No focus frame */
+        }
+
+        .card {
+            border: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+        <div class="card text-center">
+            <div class="card-header">
+                <ul class="nav nav-pills float-left" id="pills-tab" role="tablist">
+                    <li class="nav-item history">
+                        <a class="nav-link active" id="pills-history-tab" data-toggle="pill" href="#pills-history" role="tab" aria-controls="pills-history"
+                            aria-selected="true">Execution History</a>
+                    </li>
+                    <li class="nav-item statistics">
+                        <a class="nav-link" id="pills-statistics-tab" data-toggle="pill" href="#pills-statistics" role="tab" aria-controls="pills-statistics"
+                            aria-selected="false">Statistics</a>
+                    </li>
+                </ul>
+                <button id="selectCases" class="btn btn-primary float-right ml-1" data-toggle="modal" data-target="#selectCaseModal">
+                        <i class="far fa-plus-square fa-lg"></i>
+                </button>
+                <input type="text" class="form-control w-25 float-right" id="recordSearch" placeholder="search">
+            </div>
+        </div>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-history" role="tabpanel" aria-labelledby="pills-history-tab">
+                <table id="recordsTable" class="table table-bordered" cellspacing="0" width="100%">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>id</th>
+                            <th>test cases</th>
+                            <th>owner</th>
+                            <th>start time</th>
+                            <th>end time</th>
+                            <th>task id</th>
+                            <th>status</th>
+                            <th>log</th>
+
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+            <div class="tab-pane fade" id="pills-statistics" role="tabpanel" aria-labelledby="pills-statistics-tab">
+                <div class="" id="statusPieDiv" style="width: 600px;height:400px;"></div>
+
+            </div>
+
+        </div>
+
+
+
+    <!-- Modal-Select-Case -->
+    <div class="selectCase modal fade" id="selectCaseModal" tabindex="-1" role="dialog" aria-labelledby="selectCaseModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="selectCase container">
+                    <input type="text" class="form-control my-3 " name="caseSearch" placeholder="search">
+
+                    <div id="tree"></div>
+
+                    <div class="clearfix">
+                        <button id="execute" type="button" class="btn btn-primary my-3 float-right">Submit</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal-alert -->
+    <div class="alert modal" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"
+        data-backdrop="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div style="font-size:1.5em; color:red" id="Title"><i class="fas fa-exclamation-triangle "></i></div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/fancytree/jquery.fancytree-all-deps.min.js"></script>
+    <script src="/static/js/jquery.dataTables.js"></script>
+    <script src="/static/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.0.2/echarts.min.js"></script>
+    <script src="/static/js/execution.js"></script>
+
+</body>
+
+</html>

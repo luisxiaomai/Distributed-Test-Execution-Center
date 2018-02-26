@@ -234,7 +234,6 @@ $('#selectCaseModal').on('show.bs.modal', function (e) {
 
 
 
-
 $("input[name=caseSearch]").keyup(function (e) {
     var n,
         tree = $.ui.fancytree.getTree(),
@@ -301,6 +300,7 @@ $("#execute").click(function () {
                 $('.alert').modal("show");
             }
         })
+        
 
 
     } else if (count > 5) {

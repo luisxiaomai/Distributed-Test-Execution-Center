@@ -11,9 +11,17 @@ from sqlalchemy import desc, asc
 
 @main.route("/", methods=["GET","POST"])
 def index():
+    return render_template("index.html")
+
+@main.route("/execution", methods=["GET","POST"])
+def execution():
     recordList = Record.query.all()
     print(cases_folder)
-    return render_template("index.html",recordList=recordList)
+    return render_template("execution.html",recordList=recordList)
+
+@main.route("/statistics", methods=["GET","POST"])
+def statistics():
+    return render_template("statistics.html")
 
 @main.route("/details", methods=["GET","POST"])
 def details():
