@@ -14,76 +14,86 @@
     <link type="text/css" rel="stylesheet" href="static/css/bsadmin.css">
     <link type="text/css" rel="stylesheet" href="static/css/execution.css">
     <style>
-        .sidebar-header {
-            background-color: #007bff;
-            min-height: 56px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
     </style>
 </head>
 
 <body>
 
 
-    <div class="d-flex">
-        <nav class="sidebar bg-dark">
+    <div class="wrapper">
+        <!-- Sidebar Holder -->
+        <nav id="sidebar">
             <div class="sidebar-header">
-                <a class="sidebar-toggle  navbar-brand" href="#">
+                <a class=" navbar-brand" href="/">
                     <i class="fa fa-code-branch"></i> QualityX</a>
-
+                <span class="sidebar-toggle navbar-brand">
+                    <i class="fa fa-code-branch"></i>
+                </span>
             </div>
-            <ul class="list-unstyled">
+
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="#homeSubmenu" data-toggle="collapse" data-parent=".components" aria-expanded="false">
+                        <i class="fas fa-laptop"></i>
+                        <span>Home</span>
+                    </a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                        <li>
+                            <a class="sub-item" href="#">Home 1</a>
+                        </li>
+                        <li>
+                            <a class="sub-item" href="#">Home 2</a>
+                        </li>
+                        <li>
+                            <a class="sub-item" href="#">Home 3</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+
+                    <a href="#pageSubmenu" data-toggle="collapse" data-parent=".components" aria-expanded="false">
+                        <i class="fas fa-server"></i>
+                        <span>Test Automation</span>
+                    </a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <li>
+                            <a class="sub-item" href="#" onclick="showAtRight('/execution')">Execution</a>
+                        </li>
+                        <li>
+                            <a class="sub-item" href="#" onclick="showAtRight('/statistics')">Statistics</a>
+                        </li>
+
+                    </ul>
+                </li>
                 <li>
                     <a href="#">
-                        <i class="fa fa-fw fa-link"></i> Sidebar Link</a>
+                        <i class="fa fa-edit"></i>
+                        <span>Portfolio</span>
+                    </a>
                 </li>
                 <li>
-                    <a href="#" onclick="showAtRight('/execution')">
-                        <i class="fa fa-fw fa-link"></i> Execution</a>
+                    <a href="#">
+                        <i class="fas fa-question"></i>
+                        <span>FAQ</span>
+                    </a>
                 </li>
                 <li>
-                    <a href="#submenu1" data-toggle="collapse">
-                        <i class="fas fa-server"></i> Test Automation</a>
-                    <ul id="submenu1" class="list-unstyled collapse">
-                        <li>
-                            <a href="#" onclick="showAtRight('/execution')">Execution</a>
-                        </li>
-                        <li>
-                            <a href="#" onclick="showAtRight('/statistics')">Statistics</a>
-                        </li>
-
-                    </ul>
+                    <a href="#">
+                        <i class="fa fa-share"></i>
+                        <span>Userful links</span>
+                    </a>
                 </li>
-                <li>
-                    <a href="#submenu2" data-toggle="collapse">
-                        <i class="fa fa-fw fa-address-card"></i> Dropdown Link 2</a>
-                    <ul id="submenu2" class="list-unstyled collapse">
-                        <li>
-                            <a href="#">Submenu Item</a>
-                        </li>
-                        <li>
-                            <a href="#">Submenu Item</a>
-                        </li>
-                        <li>
-                            <a href="#">Submenu Item</a>
-                        </li>
-                    </ul>
-                </li>
-
             </ul>
+
+
         </nav>
 
-
-
-        <div style="width:100%">
-            <nav class="navbar navbar-expand navbar-dark bg-primary">
+        <!-- Page Content Holder -->
+        <div style="width:100%;min-height:100vh">
+            <nav class="navbar navbar-expand">
                 <a class="sidebar-toggle text-light mr-3">
                     <i class="fa fa-bars"></i>
                 </a>
-
-               
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">
@@ -98,11 +108,17 @@
                     </ul>
                 </div>
             </nav>
-            <div class="admin container-fluid mt-3" id="content">
+    
+    
+            
+            <div class="admin container-fluid" id="content">
 
             </div>
         </div>
     </div>
+
+
+
     <script src="static/js/jquery-3.2.1.min.js"></script>
     <script src="static/js/popper.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
@@ -122,8 +138,18 @@
                 }
             });
         }
-        $(function () {
-            showAtRight('/execution');
+
+
+        $(document).ready(function () {
+            var $sideComponents = $('.components');
+            $sideComponents.on('show.bs.collapse', '.collapse', function () {
+                $sideComponents.find('.collapse.show').collapse('hide');
+            });
+            $(".sub-item").on("click",function(){
+                $sideComponents.find('.collapse.show').collapse('hide');
+            })
+            showAtRight("/execution");
+           
         });
     </script>
 

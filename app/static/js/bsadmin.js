@@ -1,7 +1,7 @@
 $(document).ready(function () {
     // toggle sidebar when button clicked
     $('.sidebar-toggle').on('click', function () {
-        $('.sidebar').toggleClass('toggled');
+        $('#sidebar').toggleClass('active');
     });
 
     // auto-expand submenu if an item is active

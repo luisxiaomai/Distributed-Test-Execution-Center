@@ -34,7 +34,6 @@
 #statusPieDiv {
   background: #ffffff;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-  border-top: 3px solid #d2d6de;
-  border-top-color: #63a7f1;
+
   margin-top: 5px;
 }
