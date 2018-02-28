@@ -362,7 +362,7 @@ function update_progress(status_url, task_id) {
             } else {
                 setTimeout(function () {
                     update_progress(status_url, task_id);
-                }, 2000);
+                }, 5000);
             }
         }
 

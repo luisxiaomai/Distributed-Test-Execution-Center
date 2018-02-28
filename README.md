@@ -39,9 +39,10 @@
 - Server side processing with pagination, sort, filter
 - Execution record details page
 - Statistics page try
+- Integrate to one admin system
 
 ## Todo
+- Refactor ugly codes
 - Case level failure handle
 - Jenkins job execution integration
 - Optimize deployment, dockerlize
-- Integrate to one admin system

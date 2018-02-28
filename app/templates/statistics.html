@@ -1,67 +1,83 @@
+{% extends "base.html" %} 
+{% block rightConetent%}
+<nav aria-label="breadcrumb" role="navigation">
+    <ol class="breadcrumb ">
+        <li class="breadcrumb-item">
+            <a href="#">Test Automation</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Statistics</li>
+    </ol>
+</nav>
 
+<div class="card">
+    <div class="p-2" id="statusPieDiv" style="height:400px;"></div>
 
-<div class="p-2" id="statusPieDiv" style="height:400px;"></div>
+</div>
 
+{% endblock rightConetent%} 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.0.2/echarts.min.js"></script>
+{% block scripts %} 
+{{super()}}
+<script src="/static/js/echarts.common.min.js"></script>
+
 <script type="text/javascript">
-    $(function(){
+    $(function () {
         $.ajax({
-        url: "/recordStatistics",
-        type: "GET",
-        async: false,
-        success: function (data) {
-            var myChart = echarts.init(document.getElementById('statusPieDiv'));
+            url: "/recordStatistics",
+            type: "GET",
+            async: false,
+            success: function (data) {
+                var myChart = echarts.init(document.getElementById('statusPieDiv'));
 
-            var option = {
-                title: {
-                    text: 'Status Summary',
-                    x: 'center'
-                },
-                tooltip: {
-                    trigger: 'item',
-                    formatter: "{a} <br/>{b} : {c} ({d}%)"
-                },
-                legend: {
-                    type: 'scroll',
-                    orient: 'vertical',
-                    right: 10,
-                    top: 20,
-                    bottom: 20,
-                    data: data.legendData,
+                var option = {
+                    title: {
+                        text: 'Status Summary',
+                        x: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        type: 'scroll',
+                        orient: 'vertical',
+                        right: 10,
+                        top: 20,
+                        bottom: 20,
+                        data: data.legendData,
 
-                    selected: data.selected
-                },
-                series: [{
-                    name: 'status',
-                    type: 'pie',
-                    radius: '55%',
-                    data: [{
-                            value: data.success_count,
-                            name: 'Success',
-                            itemStyle: {
-                                color: '#28a745'
+                        selected: data.selected
+                    },
+                    series: [{
+                        name: 'status',
+                        type: 'pie',
+                        radius: '55%',
+                        data: [{
+                                value: data.success_count,
+                                name: 'Success',
+                                itemStyle: {
+                                    color: '#28a745'
+                                }
+                            },
+                            {
+                                value: data.failure_count,
+                                name: 'Failure',
+                                itemStyle: {
+                                    color: '#dc3545'
+                                }
                             }
-                        },
-                        {
-                            value: data.failure_count,
-                            name: 'Failure',
-                            itemStyle: {
-                                color: '#dc3545'
-                            }
-                        }
-                    ]
-                }]
-            };
+                        ]
+                    }]
+                };
 
-            myChart.setOption(option);
+                myChart.setOption(option);
 
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
 
-        }
+            }
+        })
     })
-    })
-    
-
 </script>
+
+{% endblock scripts %}
